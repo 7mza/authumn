@@ -1,0 +1,107 @@
+enc:
+  password: password
+  salt: 73616C74
+init:
+  privileges:
+    - label: read
+      isDefault: true
+    - label: write
+      isDefault: false
+  roles:
+    - label: admin
+      isDefault: false
+      privileges:
+        - write
+    - label: user
+      isDefault: true
+  users:
+    - email: admin@mail.com
+      password: password
+      roles:
+        - admin
+    - email: user@mail.com
+      password: password
+logging:
+  level:
+    com.authumn: DEBUG
+    root: ERROR
+scheduled:
+  rotate: '0 */30 * ? * *'
+server:
+  port: 0
+spring:
+  application:
+    name: authumn
+  config:
+    activate:
+      on-profile: default
+  datasource:
+    driverClassName: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  liquibase:
+    change-log: classpath:/db/changelog/master.xml
+    enabled: true
+  main:
+    banner-mode: 'off'
+  output:
+    ansi:
+      enabled: ALWAYS
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          client-authorization:
+            registration:
+              authorization-grant-types:
+                - authorization_code
+                - refresh_token
+              client-authentication-methods:
+                - client_secret_post
+              client-id: client-authorization
+              client-name: client-authorization
+              client-secret: '{bcrypt}$2a$10$2DkgQHbdAhPiI0Ma1NkO5.TzHhD5kgbMqLtp6SkUxHJ8cCJ3r5V0i'
+              post-logout-redirect-uris:
+                - http://127.0.0.1:8080/
+              redirect-uris:
+                - http://127.0.0.1:8080/login/oauth2/code/client-authorization
+              scopes:
+                - openid
+                - profile
+            require-authorization-consent: true
+          client-credentials:
+            registration:
+              authorization-grant-types:
+                - client_credentials
+              client-authentication-methods:
+                - client_secret_basic
+                - client_secret_post
+              client-id: client-credentials
+              client-name: client-credentials
+              client-secret: '{bcrypt}$2a$10$JIB2hYoqTE02Fmc/9yUZeedUxNrhQZh247BDjKvkhyDWWYUAaY/7G'
+              scopes:
+                - admin
+                - user
+            require-authorization-consent: false
+        issuer: http://localhost:${server.port}
+    permit-all:
+      - /actuator/health
+      - /api-docs/**
+      - /images/**
+      - /login
+      - /logout
+      - /scripts/**
+      - /signup
+      - /swagger-ui/**
+      - /webjars/**
+    permit-origins:
+      - '*'
+  session:
+    jdbc:
+      initialize-schema: never
+  sql:
+    init:
+      continue-on-error: false
+      mode: never

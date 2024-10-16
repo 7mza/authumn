@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header(pageTitle)">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <title th:text="${pageTitle}"></title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
+    <script th:src="@{/scripts/json-enc.js}"></script>
+    <script src="https://unpkg.com/htmx-ext-response-targets@2.0.0/response-targets.js"></script>
+    <script src="https://unpkg.com/htmx-ext-client-side-templates@2.0.0/client-side-templates.js"></script>
+    <script th:src="@{/webjars/mustache/mustache.min.js}"></script>
+</head>
+<body>
+<input th:fragment="csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" th:fragment="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/index}">authumn</a>
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"
+                data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item" sec:authorize="hasAuthority('admin')">
+                    <a aria-current="page" class="nav-link active" th:href="@{/index}">Privileges</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('admin')">
+                    <a aria-current="page" class="nav-link active" th:href="@{/index}">Roles</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('admin')">
+                    <a aria-current="page" class="nav-link active" th:href="@{/index}">Users</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('admin')">
+                    <a aria-current="page" class="nav-link active" th:href="@{/index}">Keys</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('admin')">
+                    <a aria-current="page" class="nav-link active" th:href="@{/index}">Clients</a>
+                </li>
+            </ul>
+            <div class="d-flex p-2">
+                <a class="link-light" th:href="@{/index}" th:text="${user.username}"></a>
+            </div>
+            <div class="d-flex p-2" sec:authorize="hasAuthority('admin')">
+                <a class="link-light" th:href="@{/swagger-ui}">Swagger UI</a>
+            </div>
+            <div class="d-flex p-2">
+                <a class="btn btn-danger" th:href="@{/logout}">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="row" th:fragment="wip">
+    <div class="alert alert-danger" role="alert">
+        UI work in progress, check api <a th:href="@{/swagger-ui}">Swagger UI</a>
+    </div>
+</div>
+</body>
+</html>

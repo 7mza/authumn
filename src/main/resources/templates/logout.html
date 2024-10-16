@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: header(pageTitle='Logout')}"></head>
+<body>
+<div class="container vh-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-md-4 shadow-sm p-3 mb-5 bg-body rounded">
+            <form method="post" th:action="@{/logout}">
+                <input th:replace="~{fragments :: csrf}"/>
+                <div class="h2 mb-3">Confirm logout</div>
+                <div class="mb-3 d-grid gap-2">
+                    <button class="btn btn-lg btn-danger btn-block" type="submit">Logout</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

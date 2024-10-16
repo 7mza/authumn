@@ -1,0 +1,195 @@
+auth-server:
+  host: localhost
+enc:
+  password: password
+  salt: 70617373776F7264
+logging:
+  include-application-name: false
+  level:
+    com.authumn: DEBUG
+    #org.springframework.security: INFO
+    root: INFO
+    web: INFO
+  pattern:
+    #level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+    #correlation: '[${spring.application.name:},%X{traceId:-},%X{spanId:-}] '
+management:
+  endpoint:
+    health:
+      group:
+        readiness:
+          include: '*'
+      probes:
+        enabled: true
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+postgres:
+  host: localhost
+  port: 5432
+scheduled:
+  rotate: '0 */30 * ? * *'
+server:
+  compression:
+    enabled: true
+  error:
+    include-message: always
+  forward-headers-strategy: framework
+  port: 9000
+  shutdown: graceful
+  ssl:
+    enabled: false
+spring:
+  application:
+    name: authumn
+  config:
+    activate:
+      on-profile: default
+  datasource:
+    driverClassName: org.postgresql.Driver
+    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://${postgres.host}:${postgres.port}/${POSTGRES_DB}
+    username: ${POSTGRES_USERNAME}
+  devtools:
+    add-properties: false
+  docker:
+    compose:
+      enabled: true
+      file: compose.spring.yml
+      profiles:
+        active: postgres
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  liquibase:
+    change-log: classpath:/db/changelog/master.xml
+    enabled: true
+  main:
+    banner-mode: 'off'
+  output:
+    ansi:
+      enabled: ALWAYS
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          client-credentials:
+            registration:
+              authorization-grant-types:
+                - client_credentials
+              client-authentication-methods:
+                - client_secret_basic
+                - client_secret_post
+              client-id: client-credentials
+              client-name: client-credentials
+              client-secret: '{bcrypt}$2a$10$JIB2hYoqTE02Fmc/9yUZeedUxNrhQZh247BDjKvkhyDWWYUAaY/7G'
+              scopes:
+                - admin
+                - user
+            require-authorization-consent: false
+          client-authorization:
+            registration:
+              authorization-grant-types:
+                - authorization_code
+                - refresh_token
+              client-authentication-methods:
+                - client_secret_post
+              client-id: client-authorization
+              client-name: client-authorization
+              client-secret: '{bcrypt}$2a$10$2DkgQHbdAhPiI0Ma1NkO5.TzHhD5kgbMqLtp6SkUxHJ8cCJ3r5V0i'
+              post-logout-redirect-uris:
+                - http://127.0.0.1:8080/
+              redirect-uris:
+                - http://127.0.0.1:8080/login/oauth2/code/client-authorization
+              scopes:
+                - openid
+                - profile
+            require-authorization-consent: true
+        issuer: http://${auth-server.host}:${server.port}
+    permit-all:
+      - /actuator/health
+      - /api-docs/**
+      - /images/**
+      - /login
+      - /logout
+      - /scripts/**
+      - /signup
+      - /swagger-ui/**
+      - /webjars/**
+    permit-origins:
+      - '*'
+  session:
+    jdbc:
+      initialize-schema: never
+  sql:
+    init:
+      continue-on-error: false
+      mode: never
+  threads:
+    virtual:
+      enabled: true
+springdoc:
+  api-docs.path: /api-docs
+  cache:
+    disabled: true
+  packagesToScan: com.authumn
+  pathsToMatch: /**
+  swagger-ui:
+    oauth:
+      clientId: client-credentials
+      clientSecret: secret2
+    operationsSorter: method
+    path: /swagger-ui
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  devtools:
+    add-properties: true
+  jpa:
+    show-sql: true
+---
+auth-server:
+  host: authumn
+postgres:
+  host: postgres
+server:
+  port: 9000
+spring:
+  config:
+    activate:
+      on-profile: docker
+---
+init:
+  privileges:
+    - label: read
+      isDefault: true
+    - label: write
+      isDefault: false
+  roles:
+    - label: admin
+      isDefault: false
+      privileges:
+        - write
+    - label: user
+      isDefault: true
+  users:
+    - email: admin@mail.com
+      password: password
+      roles:
+        - admin
+    - email: user@mail.com
+      password: password
+spring:
+  config:
+    activate:
+      on-profile: init

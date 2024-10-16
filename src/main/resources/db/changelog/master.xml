@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <include file="db/changelog/000_default_tables.sql"/>
+    <include file="db/changelog/001_alter_session_table.sql"/>
+    <include file="db/changelog/002_custom_tables.sql"/>
+    <!-- <include file="db/changelog/003_init.sql"/> -->
+</databaseChangeLog>
