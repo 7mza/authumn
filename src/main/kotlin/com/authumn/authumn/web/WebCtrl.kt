@@ -1,78 +1,70 @@
 package com.authumn.authumn.web
 
 import com.authumn.authumn.commons.AuthenticationFacade
-import com.authumn.authumn.commons.ErrorDto
-import com.authumn.authumn.users.KustomUser
-import com.authumn.authumn.users.UserGetDto
+import com.authumn.authumn.users.IUserService
 import com.authumn.authumn.users.UserPostDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.reactive.function.client.WebClient
-import reactor.core.publisher.Mono
+
+@RequestMapping(value = ["/"], produces = [MediaType.TEXT_HTML_VALUE])
+interface IWeb {
+    @GetMapping(path = ["", "/index"])
+    fun index(model: Model): String
+
+    @GetMapping("/login")
+    fun login(model: Model): String
+
+    @GetMapping("/logout")
+    fun logout(model: Model): String
+
+    @GetMapping("/signup")
+    fun signup(model: Model): String
+
+    @PostMapping("/signup")
+    fun signup(
+        t: UserPostDto,
+        model: Model,
+    ): String
+
+    @GetMapping("/fragments")
+    fun getFragments(model: Model): String
+}
 
 @Controller
-@RequestMapping(value = ["/"], produces = [MediaType.TEXT_HTML_VALUE])
 class WebCtrl
     @Autowired
     constructor(
         private val authenticationFacade: AuthenticationFacade,
-        private val webClient: WebClient,
-    ) {
-        @GetMapping(path = ["", "/index"])
-        fun index(model: Model): String {
-            model.addAttribute("user", (authenticationFacade.authentication?.principal as KustomUser))
+        private val service: IUserService,
+    ) : IWeb {
+        override fun index(model: Model): String {
+            model.addAttribute("principal", authenticationFacade.getPrincipal())
             return "index"
         }
 
-        @GetMapping("/login")
-        fun login(): String = "login"
+        override fun login(model: Model): String = "login"
 
-        @GetMapping("/logout")
-        fun logout(): String = "logout"
+        override fun logout(model: Model): String = "logout"
 
-        @GetMapping("/signup")
-        fun signup(): String = "signup"
+        override fun signup(model: Model): String = "signup"
 
-        @PostMapping("/signup")
-        fun pSignup(
-            @ModelAttribute dto: UserPostDto,
+        override fun signup(
+            t: UserPostDto,
             model: Model,
         ): String {
-            webClient
-                .post()
-                .uri("/api/user")
-                .bodyValue(dto)
-                .exchangeToMono {
-                    when {
-                        it.statusCode().is2xxSuccessful -> it.bodyToMono(UserGetDto::class.java)
-                        it.statusCode().isError -> it.bodyToMono(ErrorDto::class.java)
-                        else -> Mono.empty()
-                    }
-                }.block()
-                .let {
-                    when (it) {
-                        is UserGetDto -> {
-                            model.addAttribute("user", it)
-                            return "redirect:/login?created"
-                        }
-                        is ErrorDto -> {
-                            model.addAttribute("error", it)
-                            return "signup"
-                        }
-                        else -> {
-                            model.addAttribute("error", it)
-                            return "signup"
-                        }
-                    }
-                }
+            try {
+                model.addAttribute("user", service.save(t).toDto())
+            } catch (ex: Throwable) {
+                model.addAttribute("error", ex.message)
+                return "signup"
+            }
+            return "redirect:/login?created"
         }
 
-        @GetMapping("/fragments")
-        fun getFragments(): String = "fragments"
+        override fun getFragments(model: Model): String = "fragments"
     }

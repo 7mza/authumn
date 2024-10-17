@@ -1,15 +1,17 @@
 package com.authumn.authumn.commons
 
+import com.authumn.authumn.users.KustomUser
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 
 interface IAuthenticationFacade {
-    val authentication: Authentication?
+    fun getAuthentication(): Authentication?
 }
 
 @Component
 class AuthenticationFacade : IAuthenticationFacade {
-    override val authentication: Authentication?
-        get() = SecurityContextHolder.getContext()?.authentication
+    override fun getAuthentication(): Authentication? = SecurityContextHolder.getContext()?.authentication
+
+    fun getPrincipal(): KustomUser? = this.getAuthentication()?.principal as KustomUser
 }

@@ -10,11 +10,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.security.crypto.encrypt.Encryptors
 import org.springframework.security.crypto.encrypt.TextEncryptor
-import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
 class DefaultConfs {
@@ -42,12 +39,4 @@ class DefaultConfs {
         @Value("\${enc.password}") password: String,
         @Value("\${enc.salt}") salt: String,
     ): TextEncryptor = Encryptors.text(password, salt)
-
-    @Bean
-    fun webClient() =
-        WebClient
-            .builder()
-            .baseUrl("http://localhost:9000") // FIXME: from runtime
-            .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .build()
 }

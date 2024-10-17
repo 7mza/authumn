@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: header(pageTitle='authumn')}"></head>
+<head th:replace="~{fragments/head :: head(pageTitle='authumn')}"></head>
 <body>
-<nav th:replace="~{fragments :: navbar}"></nav>
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
 <div class="container-fluid">
-    <div th:replace="~{fragments :: wip}"></div>
+    <div th:replace="~{fragments/wip :: wip}"></div>
 </div>
 </body>
 </html>

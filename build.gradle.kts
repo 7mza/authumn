@@ -31,6 +31,7 @@ repositories {
     mavenCentral()
 }
 
+val bootstrapIconsVersion = "1.11.3"
 val bootstrapVersion = "5.3.3"
 val htmxThymeleafVersion = "3.5.1"
 val htmxVersion = "2.0.3"
@@ -59,8 +60,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.session:spring-session-jdbc")
-    implementation("org.springframework:spring-webflux") // for WebClient & WebTestClient
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:$thymeleafSpringSecurityVersion")
+    implementation("org.webjars.npm:bootstrap-icons:$bootstrapIconsVersion")
     implementation("org.webjars.npm:htmx.org:$htmxVersion")
     implementation("org.webjars.npm:mustache:$mustacheVersion")
     implementation("org.webjars:bootstrap:$bootstrapVersion")
@@ -76,6 +77,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.springframework:spring-webflux") // for WebTestClient
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
 
