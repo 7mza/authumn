@@ -26,7 +26,7 @@ data class RolePostDto(
         description = "default roles are automatically picked when creating a new user",
         defaultValue = "false",
     )
-    val isDefault: Boolean,
+    val isDefault: Boolean? = false,
     @Schema(
         description = "list of privilege ids",
         defaultValue = "[]",
@@ -46,7 +46,7 @@ data class RolePutDto(
         description = "default roles are automatically picked when creating a new user",
         defaultValue = "false",
     )
-    val isDefault: Boolean,
+    val isDefault: Boolean? = false,
     @Schema(
         description = "list of privilege ids",
         defaultValue = "[]",

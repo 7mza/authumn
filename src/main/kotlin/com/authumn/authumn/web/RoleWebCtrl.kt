@@ -11,6 +11,7 @@ import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @RequestMapping(value = ["/role"], produces = [MediaType.TEXT_HTML_VALUE])
 interface IRoleWeb {
@@ -26,7 +28,9 @@ interface IRoleWeb {
         @ModelAttribute
         @Valid
         t: RolePostDto,
+        bindingResult: BindingResult,
         model: Model,
+        redirectAttributes: RedirectAttributes,
     ): String
 
     @GetMapping("/{id}")
@@ -35,10 +39,14 @@ interface IRoleWeb {
         @NotBlank(message = "id must not be blank")
         id: String,
         model: Model,
+        redirectAttributes: RedirectAttributes,
     ): String
 
     @GetMapping
-    fun findAll(model: Model): String
+    fun findAll(
+        model: Model,
+        redirectAttributes: RedirectAttributes,
+    ): String
 
     @PutMapping("/{id}")
     fun update(
@@ -48,7 +56,9 @@ interface IRoleWeb {
         @ModelAttribute
         @Valid
         x: RolePutDto,
+        bindingResult: BindingResult,
         model: Model,
+        redirectAttributes: RedirectAttributes,
     ): String
 
     @DeleteMapping("/{id}")
@@ -57,6 +67,7 @@ interface IRoleWeb {
         @NotBlank(message = "id must not be blank")
         id: String,
         model: Model,
+        redirectAttributes: RedirectAttributes,
     ): String
 }
 
@@ -70,24 +81,33 @@ class RoleWebCtrl
     ) : IRoleWeb {
         override fun save(
             t: RolePostDto,
+            bindingResult: BindingResult,
             model: Model,
+            redirectAttributes: RedirectAttributes,
         ): String = throw NotImplementedError()
 
         override fun findById(
             id: String,
             model: Model,
+            redirectAttributes: RedirectAttributes,
         ): String = throw NotImplementedError()
 
-        override fun findAll(model: Model): String = throw NotImplementedError()
+        override fun findAll(
+            model: Model,
+            redirectAttributes: RedirectAttributes,
+        ): String = throw NotImplementedError()
 
         override fun update(
             id: String,
             x: RolePutDto,
+            bindingResult: BindingResult,
             model: Model,
+            redirectAttributes: RedirectAttributes,
         ): String = throw NotImplementedError()
 
         override fun deleteById(
             id: String,
             model: Model,
+            redirectAttributes: RedirectAttributes,
         ): String = throw NotImplementedError()
     }

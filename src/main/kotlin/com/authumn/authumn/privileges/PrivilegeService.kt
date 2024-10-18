@@ -174,5 +174,5 @@ fun PrivilegePostDto.fromDto() =
     Privilege(
         id = "",
         label = this.label.lowercase(),
-        isDefault = this.isDefault,
+        isDefault = this.isDefault ?: false,
     )

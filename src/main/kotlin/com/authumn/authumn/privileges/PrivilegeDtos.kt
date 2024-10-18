@@ -3,6 +3,7 @@ package com.authumn.authumn.privileges
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
+import java.io.Serializable
 
 data class PrivilegeGetDto(
     val id: String,
@@ -10,7 +11,7 @@ data class PrivilegeGetDto(
     val isDefault: Boolean,
     val createdAt: String,
     val updateAt: String,
-)
+) : Serializable
 
 data class PrivilegePostDto(
     @field:NotBlank(message = "label must not be blank")
@@ -24,7 +25,7 @@ data class PrivilegePostDto(
         description = "default privileges are automatically picked when creating a new role",
         defaultValue = "false",
     )
-    val isDefault: Boolean,
+    val isDefault: Boolean? = false,
 )
 
 data class PrivilegePutDto(
@@ -39,5 +40,5 @@ data class PrivilegePutDto(
         description = "default privileges are automatically picked when creating a new role",
         defaultValue = "false",
     )
-    val isDefault: Boolean,
+    val isDefault: Boolean? = false,
 )

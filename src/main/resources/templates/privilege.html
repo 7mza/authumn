@@ -5,12 +5,22 @@
     <nav th:replace="~{fragments/navbar :: navbar}"></nav>
     <div class="container vh-100">
       <div th:replace="~{fragments/wip :: wip}"></div>
+      <div class="mb-3 d-grid gap-2" th:if="${error}">
+        <div
+          class="alert alert-danger mb-3"
+          role="alert"
+          th:text="${error}"
+        ></div>
+      </div>
       <div class="mb-3 float-end">
-        <form th:action="@{/privilege}" th:method="get">
-          <button class="btn btn btn-success btn-lg" type="submit">
-            <i class="bi bi-plus-square-fill"></i> new
-          </button>
-        </form>
+        <button
+          class="btn btn-success btn-l"
+          data-bs-target="#save"
+          data-bs-toggle="modal"
+          type="button"
+        >
+          New <i class="bi bi-plus-square-fill"></i>
+        </button>
       </div>
       <div class="mb-3">
         <table class="table table-hover">
@@ -60,7 +70,7 @@
                   tabindex="-1"
                   th:id="'delete' + ${privilege.id}"
                 >
-                  <div class="modal-dialog">
+                  <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                       <form
                         th:action="@{/privilege/{id}(id=${privilege.id})}"
@@ -88,6 +98,74 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+    <div
+      aria-hidden="true"
+      aria-labelledby="saveLabel"
+      class="modal fade"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      th:id="save"
+    >
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+          <form th:action="@{/privilege}" th:method="post">
+            <input th:replace="~{fragments/csrf :: csrf}" />
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="saveLabel">Add new privilege</h1>
+              <button
+                aria-label="Close"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                type="button"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label" for="label">Label</label>
+                <input
+                  class="form-control"
+                  id="label"
+                  name="label"
+                  required
+                  type="text"
+                />
+              </div>
+              <div class="form-check form-switch">
+                <input
+                  aria-describedby="isDefaultHelp"
+                  class="form-check-input"
+                  id="isDefault"
+                  name="isDefault"
+                  role="switch"
+                  type="checkbox"
+                  value="true"
+                />
+                <label class="form-check-label" for="isDefault"
+                  >is default?</label
+                >
+                <div class="form-text" id="isDefaultHelp">
+                  default privileges are automatically added to new and existing
+                  roles
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                type="button"
+              >
+                Cancel
+              </button>
+              <button class="btn btn-success" type="submit">
+                Save <i class="bi bi-plus-square-fill"></i>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </body>

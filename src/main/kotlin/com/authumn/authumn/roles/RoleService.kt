@@ -148,6 +148,6 @@ fun RolePostDto.fromDto(privileges: Collection<Privilege>) =
     Role(
         id = "",
         label = this.label.lowercase(),
-        isDefault = this.isDefault,
+        isDefault = this.isDefault ?: false,
         privileges = privileges,
     )

@@ -11,6 +11,7 @@ import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @RequestMapping(value = ["/privilege"], produces = [MediaType.TEXT_HTML_VALUE])
 interface IPrivilegeWeb {
@@ -26,7 +28,9 @@ interface IPrivilegeWeb {
         @ModelAttribute
         @Valid
         t: PrivilegePostDto,
+        bindingResult: BindingResult,
         model: Model,
+        redirectAttributes: RedirectAttributes,
     ): String
 
     @GetMapping("/{id}")
@@ -35,10 +39,14 @@ interface IPrivilegeWeb {
         @NotBlank(message = "id must not be blank")
         id: String,
         model: Model,
+        redirectAttributes: RedirectAttributes,
     ): String
 
     @GetMapping
-    fun findAll(model: Model): String
+    fun findAll(
+        model: Model,
+        redirectAttributes: RedirectAttributes,
+    ): String
 
     @PutMapping("/{id}")
     fun update(
@@ -49,6 +57,7 @@ interface IPrivilegeWeb {
         @Valid
         x: PrivilegePutDto,
         model: Model,
+        redirectAttributes: RedirectAttributes,
     ): String
 
     @DeleteMapping("/{id}")
@@ -57,6 +66,7 @@ interface IPrivilegeWeb {
         @NotBlank(message = "id must not be blank")
         id: String,
         model: Model,
+        redirectAttributes: RedirectAttributes,
     ): String
 }
 
@@ -70,15 +80,31 @@ class PrivilegeWebCtrl
     ) : IPrivilegeWeb {
         override fun save(
             t: PrivilegePostDto,
+            bindingResult: BindingResult,
             model: Model,
-        ): String = throw NotImplementedError()
+            redirectAttributes: RedirectAttributes,
+        ): String {
+            try {
+                if (bindingResult.hasErrors()) {
+                    throw Throwable(message = bindingResult.allErrors.map { it.defaultMessage }.joinToString { "$it" })
+                }
+                service.save(t).toDto()
+            } catch (ex: Throwable) {
+                redirectAttributes.addFlashAttribute("error", ex.message)
+            }
+            return "redirect:/privilege"
+        }
 
         override fun findById(
             id: String,
             model: Model,
+            redirectAttributes: RedirectAttributes,
         ): String = throw NotImplementedError()
 
-        override fun findAll(model: Model): String {
+        override fun findAll(
+            model: Model,
+            redirectAttributes: RedirectAttributes,
+        ): String {
             try {
                 model.addAttribute("principal", authenticationFacade.getPrincipal())
                 model.addAttribute("privileges", service.findAll().map { it.toDto() })
@@ -92,19 +118,18 @@ class PrivilegeWebCtrl
             id: String,
             x: PrivilegePutDto,
             model: Model,
+            redirectAttributes: RedirectAttributes,
         ): String = throw NotImplementedError()
 
         override fun deleteById(
             id: String,
             model: Model,
+            redirectAttributes: RedirectAttributes,
         ): String {
             try {
-                model.addAttribute("principal", authenticationFacade.getPrincipal())
                 service.deleteById(id)
-                model.addAttribute("privileges", service.findAll().map { it.toDto() })
             } catch (ex: Throwable) {
-                ex.cause?.cause
-                model.addAttribute("error", ex.message)
+                redirectAttributes.addFlashAttribute("error", ex.message)
             }
             return "redirect:/privilege"
         }
