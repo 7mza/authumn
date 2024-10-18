@@ -12,6 +12,8 @@
                 <th scope="col">id</th>
                 <th scope="col">label</th>
                 <th scope="col">isDefault</th>
+                <th scope="col">createdAt</th>
+                <th scope="col">updateAt</th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -20,6 +22,8 @@
                 <th scope="row" th:text="${privilege.id}"></th>
                 <td th:text="${privilege.label}"></td>
                 <td th:text="${privilege.isDefault}"></td>
+                <td th:text="${privilege.createdAt}"></td>
+                <td th:text="${privilege.updateAt}"></td>
                 <td>
                     <form th:action="@{/privilege/{id}(id=${privilege.id})}" th:method="delete">
                         <input th:replace="~{fragments/csrf :: csrf}"/>

@@ -10,6 +10,8 @@ data class RoleGetDto(
     val label: String,
     val isDefault: Boolean,
     val privileges: Collection<PrivilegeGetDto>,
+    val createdAt: String,
+    val updateAt: String,
 )
 
 data class RolePostDto(

@@ -63,6 +63,8 @@ data class User(
             id = this.id,
             email = this.email,
             roles = this.roles.map { it.toDto() },
+            createdAt = this.createdAt.toString(),
+            updateAt = this.updateAt.toString(),
         )
 }
 

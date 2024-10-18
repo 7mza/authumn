@@ -10,6 +10,8 @@ data class UserGetDto(
     val id: String,
     val email: String,
     val roles: Collection<RoleGetDto>,
+    val createdAt: String,
+    val updateAt: String,
 )
 
 data class UserPostDto(

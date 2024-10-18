@@ -46,6 +46,8 @@ data class Privilege(
             id = this.id,
             label = this.label,
             isDefault = this.isDefault,
+            createdAt = this.createdAt.toString(),
+            updateAt = this.updateAt.toString(),
         )
 }
 

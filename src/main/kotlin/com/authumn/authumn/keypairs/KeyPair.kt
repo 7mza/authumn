@@ -53,6 +53,7 @@ data class KeyPair(
             publicKey = textEncryptor.decrypt(this.publicKey),
             privateKey = textEncryptor.decrypt(this.privateKey),
             createdAt = this.createdAt.toString(),
+            updateAt = this.updateAt.toString(),
         )
 }
 

@@ -8,6 +8,8 @@ data class PrivilegeGetDto(
     val id: String,
     val label: String,
     val isDefault: Boolean,
+    val createdAt: String,
+    val updateAt: String,
 )
 
 data class PrivilegePostDto(
