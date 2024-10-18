@@ -33,8 +33,10 @@ repositories {
 
 val bootstrapIconsVersion = "1.11.3"
 val bootstrapVersion = "5.3.3"
+val datatablesVersion = "2.1.0"
 val htmxThymeleafVersion = "3.5.1"
 val htmxVersion = "2.0.3"
+val jqueryVersion = "3.7.1"
 val mockitoKotlinVersion = "5.4.0"
 val mustacheVersion = "4.2.0"
 val openapiVersion = "2.6.0"
@@ -65,6 +67,8 @@ dependencies {
     implementation("org.webjars.npm:htmx.org:$htmxVersion")
     implementation("org.webjars.npm:mustache:$mustacheVersion")
     implementation("org.webjars:bootstrap:$bootstrapVersion")
+    implementation("org.webjars:datatables:$datatablesVersion")
+    implementation("org.webjars:jquery:$jqueryVersion")
     implementation("org.webjars:webjars-locator:$webjarsLocatorVersion")
 
     runtimeOnly("com.h2database:h2")

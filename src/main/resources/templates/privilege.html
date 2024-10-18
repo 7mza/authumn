@@ -12,7 +12,7 @@
           th:text="${error}"
         ></div>
       </div>
-      <div class="mb-3 float-end">
+      <div class="mb-3">
         <button
           class="btn btn-success btn-l"
           data-bs-target="#save"
@@ -22,22 +22,24 @@
           New <i class="bi bi-plus-square-fill"></i>
         </button>
       </div>
-      <div class="mb-3">
-        <table class="table table-hover">
+      <div class="mb-3 table-responsive">
+        <table class="table table-hover" id="table">
           <thead>
             <tr>
-              <th scope="col">id</th>
-              <th scope="col">label</th>
-              <th scope="col">isDefault</th>
-              <th scope="col">createdAt (UTC)</th>
-              <th scope="col">updateAt (UTC)</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
+              <th scope="col">Label</th>
+              <th scope="col">Is default</th>
+              <th scope="col">Created at (UTC)</th>
+              <th scope="col">Last update at (UTC)</th>
+              <th class="no-sort" scope="col"></th>
+              <th class="no-sort" scope="col"></th>
             </tr>
           </thead>
           <tbody>
-            <tr th:each="privilege: ${privileges}">
-              <th scope="row" th:text="${privilege.id}"></th>
+            <tr
+              data-bs-toggle="popover"
+              th:data-bs-content="'id: ' + ${privilege.id}"
+              th:each="privilege: ${privileges}"
+            >
               <td th:text="${privilege.label}"></td>
               <td th:text="${privilege.isDefault}"></td>
               <td th:text="${privilege.createdAt}"></td>
@@ -168,5 +170,7 @@
         </div>
       </div>
     </div>
+    <script th:src="@{/scripts/datatables-init.js}"></script>
+    <script th:src="@{/scripts/popover-init.js}"></script>
   </body>
 </html>
