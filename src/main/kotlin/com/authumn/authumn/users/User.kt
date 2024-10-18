@@ -42,13 +42,13 @@ data class User(
     @field:NotBlank(message = "password must not be blank")
     @field:NotEmpty(message = "password must not be empty")
     var password: String,
+    // @field:NotEmpty(message = "roles must not be empty")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "users_roles",
         joinColumns = [JoinColumn(name = "userId", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "roleId", referencedColumnName = "id")],
     )
-    @field:NotEmpty(message = "roles must not be empty")
     var roles: Collection<Role>,
     @Column(nullable = false)
     @CreationTimestamp

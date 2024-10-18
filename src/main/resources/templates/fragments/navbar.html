@@ -1,43 +1,69 @@
-<!DOCTYPE html>
-<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
-<body>
-<nav class="navbar navbar-expand-lg bg-light" th:fragment="navbar">
-    <div class="container-fluid">
+<!doctype html>
+<html
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-light" th:fragment="navbar">
+      <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">authumn</a>
-        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-                class="navbar-toggler"
-                data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button">
-            <span class="navbar-toggler-icon"></span>
+        <button
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          class="navbar-toggler"
+          data-bs-target="#navbarSupportedContent"
+          data-bs-toggle="collapse"
+          type="button"
+        >
+          <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item" sec:authorize="hasAuthority('admin')">
-                    <a aria-current="page" class="nav-link active" th:href="@{/privilege}">Privileges</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAuthority('admin')">
-                    <a aria-current="page" class="nav-link active" th:href="@{/index}">Roles</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAuthority('admin')">
-                    <a aria-current="page" class="nav-link active" th:href="@{/index}">Users</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAuthority('admin')">
-                    <a aria-current="page" class="nav-link active" th:href="@{/index}">Keys</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAuthority('admin')">
-                    <a aria-current="page" class="nav-link active" th:href="@{/index}">Clients</a>
-                </li>
-            </ul>
-            <div class="d-flex p-2">
-                <a class="link-dark" th:href="@{/index}" th:text="${principal.username}"></a>
-            </div>
-            <div class="d-flex p-2" sec:authorize="hasAuthority('admin')">
-                <a class="link-dark" th:href="@{/swagger-ui}">Swagger UI</a>
-            </div>
-            <div class="d-flex p-2">
-                <a class="btn btn-danger" th:href="@{/logout}">Logout</a>
-            </div>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item" sec:authorize="hasAuthority('admin')">
+              <a
+                aria-current="page"
+                class="nav-link active"
+                th:href="@{/privilege}"
+                >Privileges</a
+              >
+            </li>
+            <li class="nav-item" sec:authorize="hasAuthority('admin')">
+              <a aria-current="page" class="nav-link active" th:href="@{/index}"
+                >Roles</a
+              >
+            </li>
+            <li class="nav-item" sec:authorize="hasAuthority('admin')">
+              <a aria-current="page" class="nav-link active" th:href="@{/index}"
+                >Users</a
+              >
+            </li>
+            <li class="nav-item" sec:authorize="hasAuthority('admin')">
+              <a aria-current="page" class="nav-link active" th:href="@{/index}"
+                >Keys</a
+              >
+            </li>
+            <li class="nav-item" sec:authorize="hasAuthority('admin')">
+              <a aria-current="page" class="nav-link active" th:href="@{/index}"
+                >Clients</a
+              >
+            </li>
+          </ul>
+          <div class="d-flex p-2">
+            <a
+              class="link-dark"
+              th:href="@{/index}"
+              th:text="${principal.username}"
+            ></a>
+          </div>
+          <div class="d-flex p-2" sec:authorize="hasAuthority('admin')">
+            <a class="link-dark" th:href="@{/swagger-ui}">Swagger UI</a>
+          </div>
+          <div class="d-flex p-2">
+            <a class="btn btn-danger" th:href="@{/logout}">Logout</a>
+          </div>
         </div>
-    </div>
-</nav>
-</body>
+      </div>
+    </nav>
+  </body>
 </html>

@@ -1,39 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: head(pageTitle='Sign in')}"></head>
-<body>
-<div class="container vh-100">
-    <div class="row h-100 justify-content-center align-items-center">
+  <head th:replace="~{fragments/head :: head(pageTitle='Sign in')}"></head>
+  <body>
+    <div class="container vh-100">
+      <div class="row h-100 justify-content-center align-items-center">
         <div class="col-md-4 shadow-sm p-3 mb-5 bg-body rounded">
-            <form method="post" th:action="@{/login}">
-                <input th:replace="~{fragments/csrf :: csrf}"/>
-                <div class="h2 mb-3">Sign in</div>
-                <div class="alert alert-danger mb-3" role="alert" th:if="${param.error}">Bad credentials</div>
-                <div class="alert alert-success mb-3" role="alert" th:if="${param.logout}">You have been signed out
-                </div>
-                <div class="alert alert-success mb-3" role="alert" th:if="${param.created}">Account created</div>
-                <div class="mb-3">
-                    <input autofocus class="form-control" id="email" name="username" placeholder="Email" required
-                           type="email">
-                </div>
-                <div class="mb-3">
-                    <input class="form-control" id="password" name="password" placeholder="Password" required
-                           type="password">
-                </div>
-                <div class="mb-3 d-grid gap-2">
-                    <button class="btn btn-lg btn-primary" type="submit">
-                        Sign in <i class="bi bi-box-arrow-in-right"></i>
-                    </button>
-                </div>
-                <div class="mb-3">
-                    <a class="link-primary" th:href="@{/}">Reset password</a>
-                </div>
-                <div class="mb-3">
-                    <a class="link-success" th:href="@{/signup}">Sign up</a>
-                </div>
-            </form>
+          <form method="post" th:action="@{/login}">
+            <input th:replace="~{fragments/csrf :: csrf}" />
+            <div class="h2 mb-3">Sign in</div>
+            <div
+              class="alert alert-danger mb-3"
+              role="alert"
+              th:if="${param.error}"
+            >
+              Bad credentials
+            </div>
+            <div
+              class="alert alert-success mb-3"
+              role="alert"
+              th:if="${param.logout}"
+            >
+              You have been signed out
+            </div>
+            <div
+              class="alert alert-success mb-3"
+              role="alert"
+              th:if="${param.created}"
+            >
+              Account created
+            </div>
+            <div class="mb-3">
+              <input
+                autofocus
+                class="form-control"
+                id="email"
+                name="username"
+                placeholder="Email"
+                required
+                type="email"
+              />
+            </div>
+            <div class="mb-3">
+              <input
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Password"
+                required
+                type="password"
+              />
+            </div>
+            <div class="mb-3 d-grid gap-2">
+              <button class="btn btn-lg btn-primary" type="submit">
+                Sign in <i class="bi bi-box-arrow-in-right"></i>
+              </button>
+            </div>
+            <div class="mb-3">
+              <a class="link-primary" th:href="@{/}">Reset password</a>
+            </div>
+            <div class="mb-3">
+              <a class="link-success" th:href="@{/signup}">Sign up</a>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>

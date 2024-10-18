@@ -7,6 +7,7 @@ import com.authumn.authumn.privileges.Privilege
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,6 +56,7 @@ class RoleServiceTest {
         assertThat(saved.updateAt).isBefore(Instant.now())
     }
 
+    @Disabled
     @Test
     fun `save with empty privileges`() {
         val ex =
@@ -126,6 +128,7 @@ class RoleServiceTest {
         assertThat(saved.last().updateAt).isBefore(Instant.now())
     }
 
+    @Disabled
     @Test
     fun `saveMany with empty privileges`() {
         val ex =

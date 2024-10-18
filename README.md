@@ -8,11 +8,11 @@ on [Spring Authorization Server](https://github.com/spring-projects/spring-autho
 still in early stages but the purpose is to provide a generic SSO server, that integrate seamlessly with spring
 cloud, can be extended with ease & supports:
 
-* rbac
-* persistence
-* horizontal scaling
-* key management
-* dynamic oauth2-client creation
+- rbac
+- persistence
+- horizontal scaling
+- key management
+- dynamic oauth2-client creation
 
 ### how to use
 
@@ -45,7 +45,7 @@ com:
 can also be configured using spring-addons or using sboot + yml if you need more ctrl
 
 ```kotlin
-// this is for webflux, adapt it if using servlet 
+// this is for webflux, adapt it if using servlet
 
 @Bean
 fun tokenSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
@@ -118,13 +118,13 @@ spring:
             client-name: client-authorization
             client-secret: secret
             provider: spring
-            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: openid, profile, ...
       resourceserver:
         jwt:
           issuer-uri: http://${authumn.host}:${authumn.port}
     permit-all: /actuator/health, ...
-    permit-origins: '*'
+    permit-origins: "*"
 ```
 
 ### how to h scale

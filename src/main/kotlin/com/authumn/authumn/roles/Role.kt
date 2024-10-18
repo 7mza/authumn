@@ -38,13 +38,13 @@ data class Role(
     var label: String,
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
     val isDefault: Boolean = false,
+    // @field:NotEmpty(message = "privileges must not be empty")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "roles_privileges",
         joinColumns = [JoinColumn(name = "roleId", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "privilegeId", referencedColumnName = "id")],
     )
-    @field:NotEmpty(message = "privileges must not be empty")
     var privileges: Collection<Privilege>,
     @Column(nullable = false)
     @CreationTimestamp

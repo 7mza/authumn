@@ -1,6 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
-<input th:fragment="csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-</body>
+  <body>
+    <input
+      th:fragment="csrf"
+      th:name="${_csrf.parameterName}"
+      th:value="${_csrf.token}"
+      type="hidden"
+    />
+  </body>
 </html>

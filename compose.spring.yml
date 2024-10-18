@@ -1,5 +1,4 @@
 services:
-
   postgres:
     image: postgres:alpine
     restart: unless-stopped
@@ -10,12 +9,13 @@ services:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - POSTGRES_USER=$POSTGRES_USERNAME
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "$POSTGRES_USERNAME", "-d", "$POSTGRES_DB" ]
+      test:
+        ["CMD", "pg_isready", "-U", "$POSTGRES_USERNAME", "-d", "$POSTGRES_DB"]
       start_period: 10s
       interval: 10s
       timeout: 5s
       retries: 5
-    profiles: [ postgres ]
+    profiles: [postgres]
 
 volumes:
   haproxy:

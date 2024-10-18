@@ -26,7 +26,7 @@ logging:
     com.authumn: DEBUG
     root: ERROR
 scheduled:
-  rotate: '0 */30 * ? * *'
+  rotate: "0 */30 * ? * *"
 server:
   port: 0
 spring:
@@ -45,7 +45,7 @@ spring:
     change-log: classpath:/db/changelog/master.xml
     enabled: true
   main:
-    banner-mode: 'off'
+    banner-mode: "off"
   mvc:
     hiddenmethod:
       filter:
@@ -66,7 +66,7 @@ spring:
                 - client_secret_post
               client-id: client-authorization
               client-name: client-authorization
-              client-secret: '{bcrypt}$2a$10$2DkgQHbdAhPiI0Ma1NkO5.TzHhD5kgbMqLtp6SkUxHJ8cCJ3r5V0i'
+              client-secret: "{bcrypt}$2a$10$2DkgQHbdAhPiI0Ma1NkO5.TzHhD5kgbMqLtp6SkUxHJ8cCJ3r5V0i"
               post-logout-redirect-uris:
                 - http://127.0.0.1:8080/
               redirect-uris:
@@ -84,7 +84,7 @@ spring:
                 - client_secret_post
               client-id: client-credentials
               client-name: client-credentials
-              client-secret: '{bcrypt}$2a$10$JIB2hYoqTE02Fmc/9yUZeedUxNrhQZh247BDjKvkhyDWWYUAaY/7G'
+              client-secret: "{bcrypt}$2a$10$JIB2hYoqTE02Fmc/9yUZeedUxNrhQZh247BDjKvkhyDWWYUAaY/7G"
               scopes:
                 - admin
                 - user
@@ -101,7 +101,7 @@ spring:
       - /swagger-ui/**
       - /webjars/**
     permit-origins:
-      - '*'
+      - "*"
   session:
     jdbc:
       initialize-schema: never
