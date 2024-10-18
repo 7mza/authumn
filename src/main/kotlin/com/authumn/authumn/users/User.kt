@@ -1,5 +1,6 @@
 package com.authumn.authumn.users
 
+import com.authumn.authumn.commons.Commons
 import com.authumn.authumn.roles.Role
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -63,8 +64,8 @@ data class User(
             id = this.id,
             email = this.email,
             roles = this.roles.map { it.toDto() },
-            createdAt = this.createdAt.toString(),
-            updateAt = this.updateAt.toString(),
+            createdAt = Commons.instantToString(this.createdAt),
+            updateAt = Commons.instantToString(this.createdAt),
         )
 }
 

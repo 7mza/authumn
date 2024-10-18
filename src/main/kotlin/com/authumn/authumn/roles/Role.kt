@@ -1,5 +1,6 @@
 package com.authumn.authumn.roles
 
+import com.authumn.authumn.commons.Commons
 import com.authumn.authumn.privileges.Privilege
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -60,8 +61,8 @@ data class Role(
             label = this.label,
             isDefault = this.isDefault,
             privileges = this.privileges.map { it.toDto() },
-            createdAt = this.createdAt.toString(),
-            updateAt = this.updateAt.toString(),
+            createdAt = Commons.instantToString(this.createdAt),
+            updateAt = Commons.instantToString(this.createdAt),
         )
 }
 

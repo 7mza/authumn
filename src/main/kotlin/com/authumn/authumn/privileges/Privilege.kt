@@ -1,5 +1,6 @@
 package com.authumn.authumn.privileges
 
+import com.authumn.authumn.commons.Commons
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -46,8 +47,8 @@ data class Privilege(
             id = this.id,
             label = this.label,
             isDefault = this.isDefault,
-            createdAt = this.createdAt.toString(),
-            updateAt = this.updateAt.toString(),
+            createdAt = Commons.instantToString(this.createdAt),
+            updateAt = Commons.instantToString(this.createdAt),
         )
 }
 

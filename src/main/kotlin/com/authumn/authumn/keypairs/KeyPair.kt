@@ -1,5 +1,6 @@
 package com.authumn.authumn.keypairs
 
+import com.authumn.authumn.commons.Commons
 import com.nimbusds.jose.jwk.RSAKey
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -52,8 +53,8 @@ data class KeyPair(
             id = this.id,
             publicKey = textEncryptor.decrypt(this.publicKey),
             privateKey = textEncryptor.decrypt(this.privateKey),
-            createdAt = this.createdAt.toString(),
-            updateAt = this.updateAt.toString(),
+            createdAt = Commons.instantToString(this.createdAt),
+            updateAt = Commons.instantToString(this.createdAt),
         )
 }
 

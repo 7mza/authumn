@@ -164,7 +164,7 @@ fun assertLoginPage(page: HtmlPage) {
 
     assertThat(usernameInput).isNotNull()
     assertThat(passwordInput).isNotNull()
-    assertThat(signInButton.textContent).isEqualTo("Sign in")
+    assertThat(signInButton.textContent.trimIndent().trimEnd()).isEqualTo("Sign in")
 }
 
 fun loginAndGetAuthorizationCode(

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div class="row" th:fragment="wip">
-    <div class="alert alert-danger" role="alert">
-        UI work in progress, check api <a th:href="@{/swagger-ui}">Swagger UI</a>
+<div class="mb-3" th:fragment="wip">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="bi bi-cone-striped"></i> UI work in progress
+        <button aria-label="Close" class="btn-close btn-sm" data-bs-dismiss="alert" type="button"></button>
     </div>
 </div>
 </body>
