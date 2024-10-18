@@ -8,12 +8,17 @@ import jakarta.transaction.Transactional
 import jakarta.validation.ConstraintViolationException
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
 @Transactional
 interface IPrivilegeService : ICrud<PrivilegePostDto, PrivilegePutDto, Privilege> {
     fun findAllByIsDefaultTrue(): Collection<Privilege>
+
+    fun addToRoles(privilege: Privilege): Int
+
+    fun removeFromRoles(id: String): Int
 }
 
 @Service
@@ -21,10 +26,13 @@ class PrivilegeService
     @Autowired
     constructor(
         private val privilegeRepo: IPrivilegeRepo,
+        private val jdbcTemplate: JdbcTemplate,
     ) : IPrivilegeService {
         override fun save(t: PrivilegePostDto): Privilege {
             try {
-                return privilegeRepo.save(t.fromDto())
+                val privilege = privilegeRepo.save(t.fromDto())
+                this.addToRoles(privilege)
+                return privilege
             } catch (ex: Throwable) {
                 when (val root = ExceptionUtils.getRootCause(ex)) {
                     is ConstraintViolationException -> {
@@ -51,7 +59,11 @@ class PrivilegeService
 
         override fun saveMany(t: Collection<PrivilegePostDto>): Collection<Privilege> {
             try {
-                return privilegeRepo.saveAll(t.map { it.fromDto() })
+                val privileges = privilegeRepo.saveAll(t.map { it.fromDto() })
+                privileges.forEach {
+                    this.addToRoles(it)
+                }
+                return privileges
             } catch (ex: Throwable) {
                 when (val root = ExceptionUtils.getRootCause(ex)) {
                     is ConstraintViolationException -> {
@@ -121,6 +133,7 @@ class PrivilegeService
 
         override fun deleteById(id: String) {
             if (existsById(id).not()) throw CustomResourceNotFoundException("Privilege with id: $id not found")
+            this.removeFromRoles(id)
             return privilegeRepo.deleteById(id)
         }
 
@@ -131,6 +144,30 @@ class PrivilegeService
         override fun count(): Long = privilegeRepo.count()
 
         override fun existsById(id: String): Boolean = privilegeRepo.existsById(id)
+
+        override fun addToRoles(privilege: Privilege): Int =
+            if (privilege.isDefault.not() || this.existsById(privilege.id).not()) {
+                0
+            } else {
+                jdbcTemplate.update(
+                    """
+                    INSERT INTO roles_privileges (privilege_id, role_id)
+                    SELECT ?, role_id
+                    FROM roles_privileges
+                    WHERE NOT EXISTS (
+                        SELECT 1 
+                        FROM roles_privileges rp
+                        WHERE rp.privilege_id = ? 
+                        AND rp.role_id = roles_privileges.role_id
+                    );
+                    """.trimIndent(),
+                    privilege.id,
+                    privilege.id,
+                )
+            }
+
+        override fun removeFromRoles(id: String): Int =
+            if (this.existsById(id)) jdbcTemplate.update("DELETE FROM roles_privileges WHERE privilege_id = ?", id) else 0
     }
 
 fun PrivilegePostDto.fromDto() =

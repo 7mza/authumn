@@ -46,6 +46,10 @@ spring:
     enabled: true
   main:
     banner-mode: 'off'
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
   output:
     ansi:
       enabled: ALWAYS

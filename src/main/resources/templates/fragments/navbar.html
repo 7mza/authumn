@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary" th:fragment="navbar">
+<nav class="navbar navbar-expand-lg bg-light" th:fragment="navbar">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/index}">authumn</a>
         <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -28,10 +28,10 @@
                 </li>
             </ul>
             <div class="d-flex p-2">
-                <a class="link-light" th:href="@{/index}" th:text="${principal.username}"></a>
+                <a class="link-dark" th:href="@{/index}" th:text="${principal.username}"></a>
             </div>
             <div class="d-flex p-2" sec:authorize="hasAuthority('admin')">
-                <a class="link-light" th:href="@{/swagger-ui}">Swagger UI</a>
+                <a class="link-dark" th:href="@{/swagger-ui}">Swagger UI</a>
             </div>
             <div class="d-flex p-2">
                 <a class="btn btn-danger" th:href="@{/logout}">Logout</a>

@@ -2,6 +2,8 @@ package com.authumn.authumn.privileges
 
 import com.authumn.authumn.commons.CustomConstraintViolationException
 import com.authumn.authumn.commons.CustomResourceNotFoundException
+import com.authumn.authumn.roles.IRoleRepo
+import com.authumn.authumn.roles.Role
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -9,7 +11,6 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.time.Instant
-import kotlin.collections.filterNot
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PrivilegeServiceTest {
@@ -17,10 +18,14 @@ class PrivilegeServiceTest {
     private lateinit var privilegeRepo: IPrivilegeRepo
 
     @Autowired
+    private lateinit var roleRepo: IRoleRepo
+
+    @Autowired
     private lateinit var service: IPrivilegeService
 
     @AfterEach
     fun afterEach() {
+        roleRepo.deleteAll()
         privilegeRepo.deleteAll()
     }
 
@@ -32,6 +37,29 @@ class PrivilegeServiceTest {
         assertThat(saved.label).isEqualTo(dto.label)
         assertThat(saved.createdAt).isBefore(Instant.now())
         assertThat(saved.updateAt).isBefore(Instant.now())
+    }
+
+    @Test
+    fun `save default is added automatically to existing roles`() {
+        roleRepo.save(
+            Role(
+                id = "",
+                label = "role1",
+                privileges = listOf(service.save(PrivilegePostDto(label = "priv1", isDefault = false))),
+            ),
+        )
+        roleRepo.save(
+            Role(
+                id = "",
+                label = "role2",
+                privileges = listOf(service.save(PrivilegePostDto(label = "priv2", isDefault = false))),
+            ),
+        )
+        service.save(PrivilegePostDto(label = "priv3", isDefault = true))
+        val roles = roleRepo.findAll()
+        assertThat(roles.size).isEqualTo(2)
+        assertThat(roles.first().privileges.size).isEqualTo(2)
+        assertThat(roles.last().privileges.size).isEqualTo(2)
     }
 
     @Test
@@ -80,6 +108,37 @@ class PrivilegeServiceTest {
         assertThat(saved.last().label).isEqualTo(dto2.label)
         assertThat(saved.last().createdAt).isBefore(Instant.now())
         assertThat(saved.last().updateAt).isBefore(Instant.now())
+    }
+
+    @Test
+    fun `saveMany default are added automatically to existing roles`() {
+        roleRepo.save(
+            Role(
+                id = "",
+                label = "role1",
+                privileges = listOf(service.save(PrivilegePostDto(label = "priv1", isDefault = false))),
+            ),
+        )
+        roleRepo.save(
+            Role(
+                id = "",
+                label = "role2",
+                privileges = listOf(service.save(PrivilegePostDto(label = "priv2", isDefault = false))),
+            ),
+        )
+        service.saveMany(
+            listOf(
+                PrivilegePostDto(label = "priv3", isDefault = true),
+                PrivilegePostDto(label = "priv4", isDefault = true),
+                PrivilegePostDto(label = "priv5", isDefault = false),
+            ),
+        )
+        val roles = roleRepo.findAll()
+        assertThat(roles.size).isEqualTo(2)
+        assertThat(roles.first().privileges.size).isEqualTo(4)
+        assertThat(roles.first().privileges.find { it.label == "priv5" }).isNull()
+        assertThat(roles.last().privileges.size).isEqualTo(4)
+        assertThat(roles.last().privileges.find { it.label == "priv5" }).isNull()
     }
 
     @Test
@@ -226,6 +285,20 @@ class PrivilegeServiceTest {
     }
 
     @Test
+    fun `deleteById with constraint`() {
+        val dto1 = PrivilegePostDto("priv1", false)
+        val dto2 = PrivilegePostDto("priv2", false)
+        val saved1 = service.save(dto1)
+        val saved2 = service.save(dto2)
+        roleRepo.save(Role(id = "", label = "role1", privileges = mutableSetOf(saved1, saved2)))
+        service.deleteById(saved1.id)
+        assertThat(privilegeRepo.count()).isEqualTo(1)
+        val role = roleRepo.findAll().first()
+        assertThat(role.privileges.size).isOne()
+        assertThat(role.privileges.first()).isEqualTo(saved2)
+    }
+
+    @Test
     fun `delete by a non existing id`() {
         val ex =
             assertThrows<CustomResourceNotFoundException> {
@@ -263,5 +336,89 @@ class PrivilegeServiceTest {
         val dto3 = PrivilegePostDto("priv3", true)
         service.saveMany(listOf(dto1, dto2, dto3))
         assertThat(service.count()).isEqualTo(3)
+    }
+
+    @Test
+    fun addToRoles() {
+        roleRepo.save(
+            Role(
+                id = "",
+                label = "role1",
+                privileges = listOf(service.save(PrivilegePostDto(label = "priv1", isDefault = false))),
+            ),
+        )
+        val priv = privilegeRepo.save(Privilege(id = "", label = "priv2", isDefault = true))
+        service.addToRoles(priv)
+        val roles = roleRepo.findAll()
+        assertThat(roles.size).isOne()
+        assertThat(roles.first().privileges.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `addToRoles non default`() {
+        roleRepo.save(
+            Role(
+                id = "",
+                label = "role1",
+                privileges = listOf(service.save(PrivilegePostDto(label = "priv1", isDefault = false))),
+            ),
+        )
+        val priv = privilegeRepo.save(Privilege(id = "", label = "priv2", isDefault = false))
+        service.addToRoles(priv)
+        val roles = roleRepo.findAll()
+        assertThat(roles.size).isOne()
+        assertThat(roles.first().privileges.size).isEqualTo(1)
+        assertThat(
+            roles
+                .first()
+                .privileges
+                .first()
+                .label,
+        ).isNotEqualTo(priv.label)
+    }
+
+    @Test
+    fun `addToRoles non existing`() {
+        roleRepo.save(
+            Role(
+                id = "",
+                label = "role1",
+                privileges = listOf(service.save(PrivilegePostDto(label = "priv1", isDefault = false))),
+            ),
+        )
+        val priv = Privilege(id = "x", label = "priv2", isDefault = false)
+        service.addToRoles(priv)
+        val roles = roleRepo.findAll()
+        assertThat(roles.size).isOne()
+        assertThat(roles.first().privileges.size).isEqualTo(1)
+        assertThat(
+            roles
+                .first()
+                .privileges
+                .first()
+                .label,
+        ).isNotEqualTo(priv.label)
+    }
+
+    @Test
+    fun removeFromRoles() {
+        val saved = privilegeRepo.save(Privilege(id = "", label = "priv1", isDefault = false))
+        roleRepo.save(Role(id = "", label = "role1", privileges = mutableSetOf(saved)))
+        assertThat(roleRepo.count()).isOne()
+        service.removeFromRoles(saved.id)
+        assertThat(privilegeRepo.count()).isOne()
+        val role = roleRepo.findAll().first()
+        assertThat(role.privileges.size).isZero()
+    }
+
+    @Test
+    fun `removeFromRoles non existing`() {
+        val saved = privilegeRepo.save(Privilege(id = "", label = "priv1", isDefault = false))
+        roleRepo.save(Role(id = "", label = "role1", privileges = mutableSetOf(saved)))
+        assertThat(roleRepo.count()).isOne()
+        service.removeFromRoles("x")
+        assertThat(privilegeRepo.count()).isOne()
+        val role = roleRepo.findAll().first()
+        assertThat(role.privileges.size).isOne()
     }
 }

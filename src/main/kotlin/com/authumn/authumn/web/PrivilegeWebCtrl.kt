@@ -80,8 +80,8 @@ class PrivilegeWebCtrl
 
         override fun findAll(model: Model): String {
             try {
-                model.addAttribute("privileges", service.findAll().map { it.toDto() })
                 model.addAttribute("principal", authenticationFacade.getPrincipal())
+                model.addAttribute("privileges", service.findAll().map { it.toDto() })
             } catch (ex: Throwable) {
                 model.addAttribute("error", ex.message)
             }
@@ -97,5 +97,15 @@ class PrivilegeWebCtrl
         override fun deleteById(
             id: String,
             model: Model,
-        ): String = throw NotImplementedError()
+        ): String {
+            try {
+                model.addAttribute("principal", authenticationFacade.getPrincipal())
+                service.deleteById(id)
+                model.addAttribute("privileges", service.findAll().map { it.toDto() })
+            } catch (ex: Throwable) {
+                ex.cause?.cause
+                model.addAttribute("error", ex.message)
+            }
+            return "redirect:/privilege"
+        }
     }
