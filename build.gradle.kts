@@ -1,5 +1,5 @@
 plugins {
-    id("com.autonomousapps.dependency-analysis") version "2.1.4"
+    id("com.autonomousapps.dependency-analysis") version "2.2.0"
     id("com.github.ben-manes.versions") version "0.51.0"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"

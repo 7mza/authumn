@@ -182,7 +182,7 @@ class RoleServiceTest {
         val dto = RolePostDto("priv1", false, listOf(privilege1.id, privilege2.id))
         val saved = service.save(dto)
         val found = service.findById(saved.id)
-        assertThat(found).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved)
+        assertThat(found).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved)
     }
 
     @Test
@@ -202,8 +202,8 @@ class RoleServiceTest {
         val saved = service.saveMany(listOf(dto1, dto2, dto3)).sortedBy { it.createdAt }
         val found = service.findManyByIds(listOf(saved.first().id, saved.last().id)).sortedBy { it.createdAt }
         assertThat(found.size).isEqualTo(2)
-        assertThat(found.first()).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved.first())
-        assertThat(found.last()).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved.last())
+        assertThat(found.first()).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved.first())
+        assertThat(found.last()).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved.last())
     }
 
     @Test
@@ -212,7 +212,7 @@ class RoleServiceTest {
         val saved = service.save(dto)
         val found = service.findManyByIds(listOf(saved.id, "1"))
         assertThat(found.size).isEqualTo(1)
-        assertThat(found.first()).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved)
+        assertThat(found.first()).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved)
     }
 
     @Test
@@ -223,7 +223,7 @@ class RoleServiceTest {
         val saved = service.saveMany(listOf(dto1, dto2, dto3))
         val found = service.findAll()
         assertThat(found.size).isEqualTo(3)
-        assertThat(found).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved)
+        assertThat(found).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved)
     }
 
     @Test

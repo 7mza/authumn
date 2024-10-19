@@ -37,7 +37,7 @@ data class Privilege(
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     val createdAt: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS),
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     val updateAt: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS),
@@ -48,7 +48,7 @@ data class Privilege(
             label = this.label,
             isDefault = this.isDefault,
             createdAt = Commons.instantToString(this.createdAt),
-            updateAt = Commons.instantToString(this.createdAt),
+            updateAt = Commons.instantToString(this.updateAt),
         )
 }
 

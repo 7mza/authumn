@@ -73,7 +73,7 @@ class UserServiceTest {
         assertThat(saved.roles.size).isEqualTo(2)
         assertThat(saved.roles.sortedBy { it.createdAt })
             .usingRecursiveComparison()
-            .ignoringFields("updateAt")
+            .ignoringFields("createdAt", "updateAt")
             .isEqualTo(listOf(role1, role2).sortedBy { it.createdAt })
         assertThat(saved.createdAt).isBefore(Instant.now())
         assertThat(saved.updateAt).isBefore(Instant.now())
@@ -160,7 +160,7 @@ class UserServiceTest {
         assertThat(saved.roles.size).isEqualTo(3)
         assertThat(saved.roles.sortedBy { it.createdAt })
             .usingRecursiveComparison()
-            .ignoringFields("updateAt")
+            .ignoringFields("createdAt", "updateAt")
             .isEqualTo(listOf(role1, role2, role4).sortedBy { it.createdAt })
     }
 
@@ -176,7 +176,7 @@ class UserServiceTest {
         assertThat(saved.first().roles.size).isEqualTo(2)
         assertThat(saved.first().roles.sortedBy { it.createdAt })
             .usingRecursiveComparison()
-            .ignoringFields("updateAt")
+            .ignoringFields("createdAt", "updateAt")
             .isEqualTo(listOf(role1, role2).sortedBy { it.createdAt })
         assertThat(saved.first().createdAt).isBefore(Instant.now())
         assertThat(saved.first().updateAt).isBefore(Instant.now())
@@ -186,7 +186,7 @@ class UserServiceTest {
         assertThat(saved.last().roles.size).isEqualTo(1)
         assertThat(saved.last().roles.sortedBy { it.createdAt })
             .usingRecursiveComparison()
-            .ignoringFields("updateAt")
+            .ignoringFields("createdAt", "updateAt")
             .isEqualTo(listOf(role3).sortedBy { it.createdAt })
         assertThat(saved.last().createdAt).isBefore(Instant.now())
         assertThat(saved.last().updateAt).isBefore(Instant.now())
@@ -282,7 +282,7 @@ class UserServiceTest {
         val dto = UserPostDto(email = "user1@mail.com", password = "password1", roles = listOf(role1.id, role2.id))
         val saved = service.save(dto)
         val found = service.findById(saved.id)
-        assertThat(found).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved)
+        assertThat(found).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved)
     }
 
     @Test
@@ -302,8 +302,8 @@ class UserServiceTest {
         val saved = service.saveMany(listOf(dto1, dto2, dto3)).sortedBy { it.createdAt }
         val found = service.findManyByIds(listOf(saved.first().id, saved.last().id)).sortedBy { it.createdAt }
         assertThat(found.size).isEqualTo(2)
-        assertThat(found.first()).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved.first())
-        assertThat(found.last()).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved.last())
+        assertThat(found.first()).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved.first())
+        assertThat(found.last()).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved.last())
     }
 
     @Test
@@ -312,7 +312,7 @@ class UserServiceTest {
         val saved = service.save(dto)
         val found = service.findManyByIds(listOf(saved.id, "1"))
         assertThat(found.size).isEqualTo(1)
-        assertThat(found.first()).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved)
+        assertThat(found.first()).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved)
     }
 
     @Test
@@ -323,7 +323,7 @@ class UserServiceTest {
         val saved = service.saveMany(listOf(dto1, dto2, dto3))
         val found = service.findAll()
         assertThat(found.size).isEqualTo(3)
-        assertThat(found).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved)
+        assertThat(found).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved)
     }
 
     @Test
@@ -342,7 +342,7 @@ class UserServiceTest {
         assertThat(updated.id).isEqualTo(saved.id)
         assertThat(updated.email).isEqualTo("_user1@mail.com")
         assertThat(passwordEncoder.matches("_password1", updated.password)).isTrue
-        assertThat(updated.roles).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(listOf(role3))
+        assertThat(updated.roles).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(listOf(role3))
         assertThat(updated.updateAt).isAfter(saved.updateAt)
         assertThat(saved.email).isEqualTo("user1@mail.com")
         assertThat(passwordEncoder.matches("password1", saved.password)).isTrue
@@ -512,7 +512,7 @@ class UserServiceTest {
         val dto = UserPostDto(email = "user1@mail.com", password = "password1", roles = listOf(role1.id, role2.id))
         val saved = service.save(dto)
         val found = service.findByEmail(dto.email)
-        assertThat(found).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(saved)
+        assertThat(found).usingRecursiveComparison().ignoringFields("createdAt", "updateAt").isEqualTo(saved)
     }
 
     @Test

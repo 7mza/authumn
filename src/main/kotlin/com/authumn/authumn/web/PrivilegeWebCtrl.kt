@@ -56,6 +56,7 @@ interface IPrivilegeWeb {
         @ModelAttribute
         @Valid
         x: PrivilegePutDto,
+        bindingResult: BindingResult,
         model: Model,
         redirectAttributes: RedirectAttributes,
     ): String
@@ -117,9 +118,20 @@ class PrivilegeWebCtrl
         override fun update(
             id: String,
             x: PrivilegePutDto,
+            bindingResult: BindingResult,
             model: Model,
             redirectAttributes: RedirectAttributes,
-        ): String = throw NotImplementedError()
+        ): String {
+            try {
+                if (bindingResult.hasErrors()) {
+                    throw Throwable(message = bindingResult.allErrors.map { it.defaultMessage }.joinToString { "$it" })
+                }
+                service.update(id, x).toDto()
+            } catch (ex: Throwable) {
+                redirectAttributes.addFlashAttribute("error", ex.message)
+            }
+            return "redirect:/privilege"
+        }
 
         override fun deleteById(
             id: String,

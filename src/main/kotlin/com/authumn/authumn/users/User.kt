@@ -54,7 +54,7 @@ data class User(
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     val createdAt: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS),
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     val updateAt: Instant = Instant.now().truncatedTo(ChronoUnit.MILLIS),
@@ -65,7 +65,7 @@ data class User(
             email = this.email,
             roles = this.roles.map { it.toDto() },
             createdAt = Commons.instantToString(this.createdAt),
-            updateAt = Commons.instantToString(this.createdAt),
+            updateAt = Commons.instantToString(this.updateAt),
         )
 }
 

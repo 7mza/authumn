@@ -26,6 +26,7 @@
         <table class="table table-hover" id="table">
           <thead>
             <tr>
+              <th scope="col">Id</th>
               <th scope="col">Label</th>
               <th scope="col">Is default</th>
               <th scope="col">Created at (UTC)</th>
@@ -35,24 +36,98 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              data-bs-toggle="popover"
-              th:data-bs-content="'id: ' + ${privilege.id}"
-              th:each="privilege: ${privileges}"
-            >
+            <tr th:each="privilege: ${privileges}">
+              <th scope="row" th:text="${privilege.id}"></th>
               <td th:text="${privilege.label}"></td>
               <td th:text="${privilege.isDefault}"></td>
               <td th:text="${privilege.createdAt}"></td>
               <td th:text="${privilege.updateAt}"></td>
               <td>
-                <form
-                  th:action="@{/privilege/{id}(id=${privilege.id})}"
-                  th:method="get"
+                <button
+                  class="btn btn-primary btn-sm"
+                  data-bs-toggle="modal"
+                  th:data-bs-target="'#update' + ${privilege.id}"
+                  type="button"
                 >
-                  <button class="btn btn-primary btn-sm" type="submit">
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                </form>
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <div
+                  aria-hidden="true"
+                  aria-labelledby="updateLabel"
+                  class="modal fade"
+                  data-bs-backdrop="static"
+                  data-bs-keyboard="false"
+                  tabindex="-1"
+                  th:id="'update' + ${privilege.id}"
+                >
+                  <div
+                    class="modal-dialog modal-dialog-scrollable modal-dialog-centered"
+                  >
+                    <div class="modal-content">
+                      <form
+                        th:action="@{/privilege/{id}(id=${privilege.id})}"
+                        th:method="put"
+                      >
+                        <input th:replace="~{fragments/csrf :: csrf}" />
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="updateLabel">
+                            Update privilege
+                          </h1>
+                          <button
+                            aria-label="Close"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            type="button"
+                          ></button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="mb-3">
+                            <label class="form-label" for="labelU">Label</label>
+                            <input
+                              class="form-control"
+                              id="labelU"
+                              name="label"
+                              required
+                              th:value="${privilege.label}"
+                              type="text"
+                            />
+                          </div>
+                          <div class="form-check form-switch">
+                            <input
+                              aria-describedby="isDefaultHelp"
+                              class="form-check-input"
+                              id="isDefaultU"
+                              name="isDefault"
+                              role="switch"
+                              th:checked="${privilege.isDefault ? 'checked' : null}"
+                              type="checkbox"
+                              value="true"
+                            />
+                            <label class="form-check-label" for="isDefaultU"
+                              >is default?</label
+                            >
+                            <div class="form-text" id="isDefaultUHelp">
+                              default privileges are automatically added to new
+                              and existing roles
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                            type="button"
+                          >
+                            Cancel
+                          </button>
+                          <button class="btn btn-primary" type="submit">
+                            Update <i class="bi bi-pencil-square"></i>
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               </td>
               <td>
                 <button
@@ -126,10 +201,10 @@
             </div>
             <div class="modal-body">
               <div class="mb-3">
-                <label class="form-label" for="label">Label</label>
+                <label class="form-label" for="labelS">Label</label>
                 <input
                   class="form-control"
-                  id="label"
+                  id="labelS"
                   name="label"
                   required
                   type="text"
@@ -137,18 +212,18 @@
               </div>
               <div class="form-check form-switch">
                 <input
-                  aria-describedby="isDefaultHelp"
+                  aria-describedby="isDefaultHelpS"
                   class="form-check-input"
-                  id="isDefault"
+                  id="isDefaultS"
                   name="isDefault"
                   role="switch"
                   type="checkbox"
                   value="true"
                 />
-                <label class="form-check-label" for="isDefault"
+                <label class="form-check-label" for="isDefaultS"
                   >is default?</label
                 >
-                <div class="form-text" id="isDefaultHelp">
+                <div class="form-text" id="isDefaultHelpS">
                   default privileges are automatically added to new and existing
                   roles
                 </div>
@@ -171,6 +246,5 @@
       </div>
     </div>
     <script th:src="@{/scripts/datatables-init.js}"></script>
-    <script th:src="@{/scripts/popover-init.js}"></script>
   </body>
 </html>
