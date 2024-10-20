@@ -41,4 +41,9 @@ data class PrivilegePutDto(
         defaultValue = "false",
     )
     val isDefault: Boolean? = false,
-)
+) {
+    fun isUpdated(
+        id: String,
+        privilege: Privilege,
+    ): Boolean = id != privilege.id || this.label != privilege.label || this.isDefault != privilege.isDefault
+}

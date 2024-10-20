@@ -239,6 +239,35 @@ class PrivilegeServiceTest {
     }
 
     @Test
+    fun `update with no change`() {
+        val dto = PrivilegePostDto("priv1", false)
+        val saved = service.save(dto)
+        val updated = service.update(saved.id, PrivilegePutDto("priv1", false))
+        assertThat(updated).isEqualTo(saved)
+    }
+
+    @Test
+    fun `update default is added automatically to existing roles`() {
+        roleRepo.save(
+            Role(
+                id = "",
+                label = "role1",
+                privileges = listOf(service.save(PrivilegePostDto(label = "priv1", isDefault = false))),
+            ),
+        )
+        val dto = PrivilegePostDto("priv2", false)
+        val saved = service.save(dto)
+        val updated = service.update(saved.id, PrivilegePutDto("priv2", true))
+        assertThat(updated.id).isEqualTo(saved.id)
+        assertThat(updated.label).isEqualTo(saved.label)
+        assertThat(updated.isDefault).isTrue()
+        assertThat(updated.updateAt).isAfter(saved.updateAt)
+        val roles = roleRepo.findAll()
+        assertThat(roles.size).isOne()
+        assertThat(roles.first().privileges.size).isEqualTo(2)
+    }
+
+    @Test
     fun `update with an existing label`() {
         val dto1 = PrivilegePostDto("priv1", false)
         val dto2 = PrivilegePostDto("priv2", false)

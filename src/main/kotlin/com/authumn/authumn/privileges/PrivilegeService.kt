@@ -103,10 +103,18 @@ class PrivilegeService
             u: PrivilegePutDto,
         ): Privilege {
             try {
-                val result =
+                val found =
                     privilegeRepo.findById(id).getOrNull() ?: throw CustomResourceNotFoundException("Privilege with id: $id not found")
-                result.label = u.label
-                return privilegeRepo.save(result)
+                if (u.isUpdated(id, found).not()) {
+                    return found
+                }
+                found.label = u.label
+                found.isDefault = u.isDefault ?: false
+                val updated = privilegeRepo.save(found)
+                if (updated.isDefault) {
+                    this.addToRoles(updated)
+                }
+                return updated
             } catch (ex: Throwable) {
                 when (val root = ExceptionUtils.getRootCause(ex)) {
                     is ConstraintViolationException -> {

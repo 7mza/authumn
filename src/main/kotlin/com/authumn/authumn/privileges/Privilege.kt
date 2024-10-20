@@ -32,7 +32,7 @@ data class Privilege(
     @field:NotEmpty(message = "label must not be empty")
     var label: String,
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
-    val isDefault: Boolean = false,
+    var isDefault: Boolean = false,
     @Column(nullable = false)
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
